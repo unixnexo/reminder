@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Settings{% endblock title %}
+
+{% block body %}
+
+{% include "header.html" %}
+
+<main>
+
+    <div class="m-5 space-y-5 max-w-fit">
+        <div>
+            <h1 class="text-2xl">Link to social media</h1>
+            <h2 class="text-sm">You'll be reminded in each app that you provide the information for it.</h2>
+        </div>
+
+        <!-- Telegram -->
+        <form>
+            <div class="flex items-center space-x-1">
+                <p>Telegram</p>
+                <!-- ! -->
+                <div class="dropdown dropdown-start dropdown-top">
+                    <div tabindex="0" role="button" class="btn btn-circle btn-ghost btn-xs text-info">
+                        <svg tabindex="0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div tabindex="0" class="card compact dropdown-content bg-base-300 rounded-box z-[1] w-64 shadow">
+                        <div tabindex="0" class="card-body">
+                            <h2 class="card-title">How to find your Telegram User ID?</h2>
+                            <p>Search for the bot <a href="https://t.me/userinfobot" class="underline" target="_blank">userinfobot</a> in Telegram, click <u>start</u>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <label class="input input-bordered flex items-center gap-2 mt-1">
+                User ID
+                <input id="telegram-input" name="telegram_id" type="text" class="grow input-sm" value="{% if telegram_id is not None  %}{{ telegram_id }}{% endif %}" required/>
+            </label>
+            <div class="lable inline-block float-end max-w-56 leading-none mt-2">
+                <span class="label-text-alt">You need to start <a href="https://t.me/unixnexo_reminder_bot" target="_blank" class="underline underline-offset-4">unixnexo_reminder_bot</a> at first, so this can work.</span>
+            </div>
+
+            <button id="toggle-telegram-btn" hx-post="{% url "toggle_send_to_telegram" %}" hx-on::after-request="ch_btn_text('toggle-telegram-btn');" hx-target="this" hx-trigger="click" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="btn btn-sm mt-2" disabled>{% if not send_to_telegram %}Add{% else %}Remove{% endif %}</button>
+        </form>
+
+        <!-- Discord -->
+        <form>
+            <div class="flex items-center space-x-1">
+                <p>Discord</p>
+                <!-- ! -->
+                <div class="dropdown">
+                    <div tabindex="0" role="button" class="btn btn-circle btn-ghost btn-xs text-info">
+                        <svg tabindex="0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div tabindex="0" class="card compact dropdown-content bg-base-300 rounded-box z-[1] w-64 shadow">
+                        <div tabindex="0" class="card-body">
+                            <h2 class="card-title">How to find discord channel id?</h2>
+                            <ul class="space-y-1 list-disc ml-2">
+                                <li>open Discord, go to Settings > Advanced and enable developer mode</li>
+                                <li>Then, join this server <a href="https://discord.gg/gScrxXas" class="underline" target="_blank">https://discord.gg/gScrxXas</a></li>
+                                <li>DM this user @unixnexo</li>
+                                <li>Then right-click on the chat with the user and select "Copy Channel ID" to get the channel ID</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <label class="input input-bordered flex items-center gap-2 mt-1">
+                Channel ID
+                <input id="discord-input" name="discord_id" type="text" class="grow input-sm" value="{% if discord_id is not None  %}{{ discord_id }}{% endif %}" required/>
+            </label>
+
+            <button id="toggle-discord-btn" hx-post="{% url "toggle_send_to_discord" %}" hx-on::after-request="ch_btn_text('toggle-discord-btn');" hx-target="this" hx-trigger="click" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="btn btn-sm mt-2" disabled>{% if not send_to_discord %}Add{% else %}Remove{% endif %}</button>
+        </form>
+
+        <!-- Email -->
+        <form>
+            <p>Email</p>
+            <label class="input input-bordered flex items-center gap-2 mt-1">
+                Address
+                <input type="text" value="{{ user_email }}" class="grow input-sm" readonly/>
+            </label>
+            <button id="toggle-email-btn" hx-post="{% url "toggle_send_to_email" %}" hx-on::after-request="ch_btn_text('toggle-email-btn')" hx-target="this" hx-trigger="click" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="btn btn-sm mt-2">{% if not send_to_email %}Add{% else %}Remove{% endif %}</button>
+        </form>
+
+    </div>
+
+    <div class="mt-20 m-5">
+        <div class="divider"></div>
+        <a href="{% url "sign_out" %}" class="btn btn-outline btn-error">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+            </svg>              
+            logout
+        </a>
+    </div>
+    
+</main>
+
+<script async src="{% static "./src/js/htmx.min.js" %}"></script> 
+<script src="{% static "./src/js/settings.js" %}"></script>
+
+{% endblock body %}

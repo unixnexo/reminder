@@ -1,0 +1,23 @@
+{% for reminder in reminders %}
+    <div id="reminder-{{ reminder.id }}" class="flex items-start justify-between basis-full md:basis-3/4 lg:basis-1/2 shrink">
+        <div>
+            <p class="font-bold text-lg">{{ reminder.reminder_text }}</p>
+            <p class="text-sm mt-1">{{ reminder.date_time }}</p>
+        </div>
+        <form method="POST" hx-post="{% url 'delete_reminder' reminder.id %}" hx-disabled-elt="#sbt_btn_{{ forloop.counter }}" hx-swap="outerHTML" hx-target="#reminder-{{ reminder.id }}">
+        {% csrf_token %}
+            <button id="sbt_btn_{{ forloop.counter }}" type="submit" class="btn btn-square btn-outline btn-sm btn-error mt-1">
+                <span class="sbt-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </span>
+            </button>
+        </form>
+    </div>
+{% empty %}
+<div class="text-center mt-20">
+    <p class="text-2xl">Create a reminder 📃, set the time ⌛ and date 📅, get notified on social media 📲.</p>
+    <p class="text-lg mt-2">By default reminders will be sent to your email. you can add more options in settings.</p>
+</div>
+{% endfor %}
