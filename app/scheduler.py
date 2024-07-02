@@ -8,7 +8,7 @@
 # ##
 # # Telegram
 # ##
-# bot_token = '7236178087:AAFw_is-lqDzLNiHn5aI57PwE1BV5XM0FxI'
+# bot_token = '-----------'
 
 # def send_scheduled_message(chat_id, text, schedule_timestamp):
 #     delay = schedule_timestamp - time.time()
