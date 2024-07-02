@@ -16,7 +16,7 @@
         </div>
 
         <!-- Telegram -->
-        <form method="POST">
+        <form method="POST" hx-post="{% url "toggle_send_to_telegram" %}" hx-on::after-request="ch_btn_text('toggle-telegram-btn');" hx-target="#toggle-telegram-btn" hx-trigger="submit">
             {% csrf_token %}
             <div class="flex items-center space-x-1">
                 <p>Telegram</p>
@@ -44,11 +44,11 @@
                 <span class="label-text-alt">You need to start <a href="https://t.me/unixnexo_reminder_bot" target="_blank" class="underline underline-offset-4">unixnexo_reminder_bot</a> at first, so this can work.</span>
             </div>
 
-            <button id="toggle-telegram-btn" hx-post="{% url "toggle_send_to_telegram" %}" hx-on::after-request="ch_btn_text('toggle-telegram-btn');" hx-target="this" hx-trigger="click" class="btn btn-sm mt-2" disabled>{% if not send_to_telegram %}Add{% else %}Remove{% endif %}</button>
+            <button id="toggle-telegram-btn" type="submit" class="btn btn-sm mt-2" disabled>{% if not send_to_telegram %}Add{% else %}Remove{% endif %}</button>
         </form>
 
         <!-- Discord -->
-        <form method="POST">
+        <form method="POST" hx-post="{% url "toggle_send_to_discord" %}" hx-on::after-request="ch_btn_text('toggle-discord-btn');" hx-target="#toggle-discord-btn" hx-trigger="submit">
             {% csrf_token %}
             <div class="flex items-center space-x-1">
                 <p>Discord</p>
@@ -78,18 +78,18 @@
                 <input id="discord-input" name="discord_id" type="text" class="grow input-sm" value="{% if discord_id is not None  %}{{ discord_id }}{% endif %}" required/>
             </label>
 
-            <button id="toggle-discord-btn" hx-post="{% url "toggle_send_to_discord" %}" hx-on::after-request="ch_btn_text('toggle-discord-btn');" hx-target="this" hx-trigger="click" class="btn btn-sm mt-2" disabled>{% if not send_to_discord %}Add{% else %}Remove{% endif %}</button>
+            <button id="toggle-discord-btn" type="submit" class="btn btn-sm mt-2" disabled>{% if not send_to_discord %}Add{% else %}Remove{% endif %}</button>
         </form>
 
         <!-- Email -->
-        <form method="POST">
+        <form method="POST" hx-post="{% url "toggle_send_to_email" %}" hx-target="#toggle-email-btn" hx-trigger="submit">
             {% csrf_token %}
             <p>Email</p>
             <label class="input input-bordered flex items-center gap-2 mt-1">
                 Address
                 <input type="text" value="{{ user_email }}" class="grow input-sm" readonly/>
             </label>
-            <button id="toggle-email-btn" hx-post="{% url "toggle_send_to_email" %}" hx-target="this" hx-trigger="click" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="btn btn-sm mt-2">{% if not send_to_email %}Add{% else %}Remove{% endif %}</button>
+            <button type="submit" id="toggle-email-btn" class="btn btn-sm mt-2">{% if not send_to_email %}Add{% else %}Remove{% endif %}</button>
         </form>
 
     </div>
